@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% load wagtailimages_tags wagtailcore_tags %}
+{% block content %}<section class="ab-hero"><div class="ab-in"><span class="m">{{ page.event_date|date:"j M Y" }}{% if page.location %} &middot; {{ page.location }}{% endif %}</span><h1>{{ page.title }}</h1></div></section>
+<div class="wrap" style="padding-top:36px">{% if page.description %}<div class="prose" style="margin-bottom:28px">{{ page.description|richtext }}</div>{% endif %}
+{% with imgs=page.published_images %}{% if imgs %}<div class="pins">{% for ai in imgs %}{% include "gallery/_pin.html" with ai=ai %}{% endfor %}</div>{% else %}<p class="empty">No images in this album yet.</p>{% endif %}{% endwith %}
+<p style="margin-top:32px"><a class="btn o" href="{{ page.get_parent.url }}">&larr; All albums</a></p></div>{% endblock %}

@@ -1,0 +1,4 @@
+:root{--w-color-primary-hue:150;--w-color-primary-saturation:90%;--w-color-primary-lightness:22%}
+.ispon-quick{background:#fff;border:2px solid #0e1210;border-radius:4px;padding:18px 22px;margin:0 0 24px}
+.ispon-quick h2{margin:0 0 12px;font-size:1.2rem}
+.ispon-quick ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}

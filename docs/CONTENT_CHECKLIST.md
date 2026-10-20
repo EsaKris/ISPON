@@ -1,0 +1,24 @@
+# Content migration checklist (ask ISPON)
+Read: homepage, About, Membership, Contact, Team, Blog page 1. Not read: Gallery, Blog page 2, individual article bodies.
+- [ ] **Leadership.** The old site is inconsistent: the homepage lists Ajayi Ibironke and Echendu as board members with no Registrar; the About page lists Monica Nwosu and Benjamin Modebe (Registrar) and a longer President name; the Team page lists 14 people (spelling now confirmed as "Nwosu"). A May 2026 public notice also mentions leadership misrepresentation and a court ruling. Only the 4 people shown on the live homepage are published; the other 10 are seeded unpublished. Confirm the list, spellings and titles, then tick "published".
+- [ ] Logo file and permission to reuse photos and portraits (none imported).
+- [ ] Homepage numbers (12,000+ registered professionals, 46+ years, 2,930 colleagues) are copied from the live homepage and shown: confirm they are current. The registration link for the Umuahia event is unknown: add it under Home > Hero and event, and Site settings > Menu button.
+- [ ] Membership fees (N50,000 form, N15,000 screening, N150,000 corporate form, N100,000 audit) are copied from the old page and now editable in Pages > Membership Procedure > Fees: confirm they are current and set the "fees confirmed" date. Add downloadable forms if any exist.
+- [ ] Branches: 17 loaded and published from the old contact table. Phone numbers lacked a leading 0 and were normalised; the Plateau address was cut off in the source; no map links; Edo branch address equals head office. Confirm all, and add the other states.
+- [ ] Office hours "Mon-Tue, 9am to 6pm" looks odd: confirm. Add a map link.
+- [ ] News: 10 articles loaded with the excerpt shown on the old listing as their text; the Abia induction, curriculum reform and "To whom it may concern" posts have no body. Paste full article text and photos. Blog page 2 and older posts are not loaded. Old dated URLs (/2026/03/20/slug/) redirect to /blog/slug/ for these 10 only: add redirects for the rest (Settings > Redirects).
+- [ ] The old "Membership Procedure" blog post duplicates the page; not imported.
+- [ ] Dead old footer links (Career, FAQ, Services): dropped.
+- [ ] Privacy policy and data-retention rule for contact messages and newsletter subscribers.
+- [ ] Newsletter: create the mail account, check SPF/DKIM, confirm the hourly sending limit with the host, add the cron job, and do a real test (see README, Email and newsletters).
+- [ ] Conference banner (Umuahia 2026, 14-16 Oct) is past: add it in Home > Event banner as a past event or leave hidden.
+- [ ] Gallery: upload albums and photos.
+- [ ] Head office latitude and longitude for geo tags and structured data (not entered, never guessed).
+- [ ] Google Search Console and Bing Webmaster verification tokens; submit /sitemap.xml after launch.
+- [ ] Set Settings > Sites hostname to ispon.gov.ng.
+- [ ] Featured image for each news article (shared links fall back to the logo until one is added).
+- [ ] Run `python manage.py import_old_site_images` to replace the generated placeholder pictures with the real ones (logo, portraits, news and gallery photos), then edit the gallery titles and alt text, and add pictures for posts the old site showed without one.
+- [ ] Team biographies are one-line placeholders built from each person's title; send real biographies. Units (Executive, Governing Board, Registry) were assigned from the titles: confirm.
+- [ ] "Register Now" in the menu points to https://isponconf-2026.org/ as on the old site; remove it once the Umuahia conference is over (Settings > Site settings > Menu button).
+- [ ] Services, Careers and FAQ pages were added. The old site had no content for them (dead links), so: FAQ answers are built only from ISPON's own published text (check them); Careers shows 'no vacancies listed' until you add some; Services reuses the six service cards.
+- [ ] Old blog page 2 (older posts) could not be read: add them from the old site.

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% load wagtailcore_tags %}
+{% block content %}{% include "includes/page_hero.html" with kicker="Work with us" title=page.title %}
+<div class="wrap" style="padding-top:36px;max-width:900px;margin:0">{% if page.intro %}<div class="prose" style="margin-bottom:28px">{{ page.intro|richtext }}</div>{% endif %}
+{% if openings %}{% for v in openings %}<article class="vac"><h2>{{ v.title }}</h2><p class="m">{{ v.location }}{% if v.job_type %} &middot; {{ v.job_type }}{% endif %}{% if v.closing_date %} &middot; closes {{ v.closing_date|date:"j M Y" }}{% endif %}</p>{% if v.description %}<div class="prose">{{ v.description|richtext }}</div>{% endif %}{% if v.apply_url %}<a class="btn" href="{{ v.apply_url }}" rel="noopener">Apply</a>{% elif v.apply_email %}<a class="btn" href="mailto:{{ v.apply_email }}?subject={{ v.title|urlencode }}">Apply by email</a>{% endif %}</article>{% endfor %}
+{% else %}<p class="empty">{{ page.empty_text|default:"No vacancies are listed at the moment." }}</p>{% endif %}</div>{% endblock %}

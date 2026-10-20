@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% load humanize %}
+{% block content %}{% include "includes/page_hero.html" with kicker="How to join" title=page.title lead=page.intro %}
+<div class="wrap prose" style="padding-top:36px;max-width:900px;margin:0">{% include "includes/stream.html" with body=page.body %}
+{% if individual_fees or corporate_fees %}<h2 style="font-size:26px;margin:1.4em 0 .4em">Fees</h2>
+{% if individual_fees %}<div style="overflow-x:auto"><table class="fees"><caption>Individual membership</caption><thead><tr><th scope="col">Item</th><th scope="col">Amount</th><th scope="col">Note</th></tr></thead><tbody>{% for f in individual_fees %}<tr><td>{{ f.label }}</td><td>&#8358;{{ f.amount|intcomma }}</td><td>{{ f.note }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if corporate_fees %}<div style="overflow-x:auto"><table class="fees"><caption>Corporate membership</caption><thead><tr><th scope="col">Item</th><th scope="col">Amount</th><th scope="col">Note</th></tr></thead><tbody>{% for f in corporate_fees %}<tr><td>{{ f.label }}</td><td>&#8358;{{ f.amount|intcomma }}</td><td>{{ f.note }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if page.fees_note %}<p>{{ page.fees_note }}</p>{% endif %}{% if page.fees_updated %}<p class="m">Fees confirmed {{ page.fees_updated|date:"j F Y" }}</p>{% endif %}{% endif %}</div>{% endblock %}

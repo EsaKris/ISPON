@@ -1,0 +1,10 @@
+{% extends "wagtailadmin/base.html" %}{% load i18n %}
+{% block titletag %}Upload photos{% endblock %}
+{% block content %}{% include "wagtailadmin/shared/header.html" with title="Upload photos" icon="image" %}
+<div class="nice-padding"><p>Select an album, then choose up to {{ max_files }} photos at once (JPG, PNG, WebP or GIF). They are published in the album straight away. Each photo\u2019s title and alt text start as its file name; afterwards, open the album to write a proper title, an optional short description and alt text.</p>
+{% if albums %}<form method="post" enctype="multipart/form-data">{% csrf_token %}
+<p><label for="album"><strong>Album</strong></label><br><select id="album" name="album" required>{% for a in albums %}<option value="{{ a.pk }}">{{ a.title }}{% if not a.live %} (draft){% endif %}</option>{% endfor %}</select></p>
+<p><label for="photos"><strong>Photos</strong></label><br><input id="photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/gif" multiple required></p>
+<p><label for="credit"><strong>Photo credit (optional, applied to all)</strong></label><br><input id="credit" name="credit" maxlength="120"></p>
+<button type="submit" class="button">Upload photos</button></form>
+{% else %}<p>You have no albums to upload to. Create an album first (Pages &rarr; Gallery &rarr; add child page).</p>{% endif %}</div>{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}{% include "includes/page_hero.html" with kicker="Photos" title=page.title lead=page.intro %}
+<div class="wrap" style="padding-top:36px">
+{% if albums %}<nav class="chips" aria-label="Filter by album" style="margin-bottom:28px"><a class="chip" href="{{ page.url }}"{% if not sel_album %} aria-current="true"{% endif %}>All photos</a>{% for a in albums %}<a class="chip" href="?album={{ a.slug }}"{% if a.slug == sel_album %} aria-current="true"{% endif %}>{{ a.title }}</a>{% endfor %}</nav>{% endif %}
+{% if pins %}<div class="pins">{% for ai in pins %}{% include "gallery/_pin.html" with ai=ai show_album=True %}{% endfor %}</div>
+<div class="pager">{% if pins.has_previous %}<a class="btn o" href="?{% if sel_album %}album={{ sel_album }}&{% endif %}page={{ pins.previous_page_number }}">Previous</a>{% endif %}{% if pins.has_next %}<a class="btn o" href="?{% if sel_album %}album={{ sel_album }}&{% endif %}page={{ pins.next_page_number }}">More photos</a>{% endif %}</div>
+{% else %}<p class="empty">No photos have been published yet.</p>{% endif %}</div>{% endblock %}

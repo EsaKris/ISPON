@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% load wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+{% include "includes/page_hero.html" with kicker="Institute of Safety Professionals of Nigeria" title=page.title lead=page.lead image=page.hero_image %}
+<section class="ab-in ab-intro"><div class="prose">{{ page.body|richtext }}</div>
+{% if page.facts.all %}<aside class="ab-facts" aria-label="Key facts">{% for f in page.facts.all %}<div><b>{{ f.value }}</b><span>{{ f.label }}</span></div>{% endfor %}</aside>{% endif %}</section>
+{% if page.timeline.all %}<section class="ab-band"><div class="ab-in"><h2 class="big">{{ page.timeline_title }}</h2><ol class="tl">{% for t in page.timeline.all %}<li><span class="tl-y">{{ t.year }}</span><div><h3>{{ t.title }}</h3>{% if t.text %}<p>{{ t.text }}</p>{% endif %}</div></li>{% endfor %}</ol></div></section>{% endif %}
+{% if page.reasons.all %}<section class="ab-in ab-why"><h2 class="big">{{ page.reasons_title }}</h2><div class="reasons">{% for r in page.reasons.all %}<article><span class="m">{{ forloop.counter|stringformat:"02d" }}</span><h3>{{ r.title }}</h3><p>{{ r.text }}</p></article>{% endfor %}</div></section>{% endif %}
+{% if page.experts.all %}<section class="ab-in ab-exp"><h2 class="big">{{ page.experts_title }}</h2>{% if page.experts_text %}<p class="prose">{{ page.experts_text }}</p>{% endif %}
+<div class="tcards">{% for e in page.experts.all %}{% with m=e.member %}<a class="tcard" href="/team/">{% if m.portrait %}{% image m.portrait fill-400x480 loading="lazy" alt=m.name %}{% endif %}<h3>{{ m.name }}</h3><span class="m">{{ m.designation }}</span></a>{% endwith %}{% endfor %}</div></section>{% endif %}
+{% if page.cta_title %}<section class="ab-cta"><div class="ab-in"><h2 class="big">{{ page.cta_title }}</h2>{% if page.cta_text %}<p>{{ page.cta_text }}</p>{% endif %}{% if page.cta_label %}<a class="btn" href="{{ page.cta_url }}">{{ page.cta_label }}</a>{% endif %}</div></section>{% endif %}
+{% endblock %}

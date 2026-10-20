@@ -1,0 +1,42 @@
+{% load static wagtailcore_tags wagtailimages_tags site_tags %}{% seo as m %}{% with s=settings.core.SiteSettings %}<!doctype html>
+<html lang="en-NG"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}{{ m.title }}{% endblock %}</title>
+<meta name="description" content="{{ m.description }}">
+<meta name="robots" content="{{ m.robots }}">
+<link rel="canonical" href="{{ m.canonical }}">
+<link rel="alternate" hreflang="en-NG" href="{{ m.canonical }}"><link rel="alternate" hreflang="x-default" href="{{ m.canonical }}">
+<meta name="application-name" content="ISPON"><meta name="theme-color" content="{{ m.s.theme_color }}">
+{% if m.s.google_verification %}<meta name="google-site-verification" content="{{ m.s.google_verification }}">{% endif %}{% if m.s.bing_verification %}<meta name="msvalidate.01" content="{{ m.s.bing_verification }}">{% endif %}
+<meta property="og:site_name" content="ISPON"><meta property="og:locale" content="en_NG"><meta property="og:type" content="{{ m.type }}"><meta property="og:title" content="{{ m.title }}"><meta property="og:description" content="{{ m.description }}"><meta property="og:url" content="{{ m.canonical }}">
+{% if m.image %}<meta property="og:image" content="{{ m.image.url }}"><meta property="og:image:width" content="{{ m.image.width }}"><meta property="og:image:height" content="{{ m.image.height }}"><meta property="og:image:alt" content="{{ m.image.alt }}">{% endif %}
+<meta name="twitter:card" content="{% if m.image %}summary_large_image{% else %}summary{% endif %}"><meta name="twitter:title" content="{{ m.title }}"><meta name="twitter:description" content="{{ m.description }}">{% if m.s.twitter_handle %}<meta name="twitter:site" content="{{ m.s.twitter_handle }}">{% endif %}{% if m.image %}<meta name="twitter:image" content="{{ m.image.url }}"><meta name="twitter:image:alt" content="{{ m.image.alt }}">{% endif %}
+{% if m.type == "article" %}<meta property="article:published_time" content="{{ m.published }}">{% if m.modified %}<meta property="article:modified_time" content="{{ m.modified }}">{% endif %}{% if page.category %}<meta property="article:section" content="{{ page.category.name }}">{% endif %}{% for t in m.tags %}<meta property="article:tag" content="{{ t }}">{% endfor %}<meta name="author" content="{{ page.author_name }}">{% endif %}
+<meta name="geo.region" content="{{ m.s.geo_region }}"><meta name="geo.placename" content="{{ m.s.geo_placename }}">{% if m.lat and m.lng %}<meta name="geo.position" content="{{ m.lat }};{{ m.lng }}"><meta name="ICBM" content="{{ m.lat }}, {{ m.lng }}">{% endif %}
+{% logo_url "fill-32x32|format-png" as fav %}{% logo_url "fill-180x180|format-png" as touch %}<link rel="icon" href="{{ fav }}"{% if not m.s.logo %} type="image/svg+xml"{% else %} type="image/png" sizes="32x32"{% endif %}><link rel="apple-touch-icon" href="{{ touch }}"><link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="ISPON News and Blog" href="/blog/feed/"><link rel="sitemap" type="application/xml" href="/sitemap.xml">
+{% jsonld m %}
+<link rel="stylesheet" href="{% static 'css/ispon.css' %}">
+{% block extra_head %}{% endblock %}</head>
+<body class="{% block body_class %}{% endblock %}"><a class="skip" href="#main">Skip to content</a>
+{% if s.phone or s.email or s.facebook or s.x_twitter or s.instagram %}<div class="topbar"><span>{% if s.phone %}<a href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a>{% endif %}{% if s.email %}<a href="mailto:{{ s.email }}">{{ s.email }}</a>{% endif %}</span><span class="tb-r">{% if s.facebook %}<a href="{{ s.facebook }}" rel="noopener">Facebook</a>{% endif %}{% if s.x_twitter %}<a href="{{ s.x_twitter }}" rel="noopener">X</a>{% endif %}{% if s.instagram %}<a href="{{ s.instagram }}" rel="noopener">Instagram</a>{% endif %}</span></div>{% endif %}
+<header class="top">
+<a class="logo" href="/" aria-label="ISPON home">{% logo_url "max-200x200|format-png" as hl %}<img src="{{ hl }}" alt="" width="44" height="44"><span>ISPON<small>Safety Professionals of Nigeria</small></span></a>
+<button class="mb" aria-expanded="false" aria-controls="nav">Menu</button>
+<nav class="nav" id="nav" aria-label="Primary">{% nav_items as nav %}{% for i in nav %}<a href="{{ i.url }}"{% if i.active %} aria-current="page"{% endif %}>{{ i.title }}</a>{% endfor %}{% if s.header_button_label and s.header_button_url %}<a class="navbtn" href="{{ s.header_button_url }}" rel="noopener">{{ s.header_button_label }}</a>{% endif %}</nav></header>
+<main id="main">{% block content %}{% endblock %}</main>
+<footer class="ft">
+<section class="ft-news" aria-labelledby="ft-nl"><div class="ft-in"><div><h2 id="ft-nl">Stay informed</h2><p>{{ s.newsletter_text|default:"Subscribe to our Newsletter to be updated. We promise not to spam." }}</p></div>
+<form method="post" action="{% url 'subscriptions:subscribe' %}">{% csrf_token %}<div class="ft-row"><label class="m" for="nl-email">Email address</label><input id="nl-email" type="email" name="email" required autocomplete="email"><button class="btn" type="submit">Subscribe</button></div><div class="hp" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></div>
+<p class="ft-consent"><input id="nl-consent" type="checkbox" name="consent" required> <label for="nl-consent">I agree to receive ISPON updates by email and can unsubscribe at any time. We will email you a link to confirm.</label></p></form></div></section>
+<div class="ft-in ft-main">
+<div><a href="/" aria-label="ISPON home" class="ft-logo">{% logo_url "max-240x240|format-png" as fl %}<img src="{{ fl }}" alt="ISPON logo" height="56"></a><p>{{ s.footer_text|default:"Institute of Safety Professionals of Nigeria." }}</p>
+<p class="soc">{% if s.facebook %}<a href="{{ s.facebook }}" rel="noopener">Facebook</a>{% endif %}{% if s.x_twitter %}<a href="{{ s.x_twitter }}" rel="noopener">X</a>{% endif %}{% if s.instagram %}<a href="{{ s.instagram }}" rel="noopener">Instagram</a>{% endif %}</p></div>
+<nav aria-label="Footer"><h3>Explore</h3><ul>{% for i in nav %}<li><a href="{{ i.url }}">{{ i.title }}</a></li>{% endfor %}{% footer_pages as fp %}{% for i in fp %}<li><a href="{{ i.url }}">{{ i.title }}</a></li>{% endfor %}<li><a href="/blog/feed/">News feed (RSS)</a></li></ul></nav>
+<div><h3>Visit us</h3>{% if s.address %}<p>{{ s.address|linebreaksbr }}</p>{% endif %}{% if s.office_hours %}<p>{{ s.office_hours }}</p>{% endif %}</div>
+<div><h3>Contact</h3><ul>{% if s.phone %}<li><a href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a></li>{% endif %}{% if s.email %}<li><a href="mailto:{{ s.email }}">{{ s.email }}</a></li>{% endif %}</ul>
+<form method="get" action="/search/" role="search" class="ft-search"><label class="m" for="fs">Search the site</label><div class="ft-row"><input id="fs" name="q"><button class="btn" type="submit">Go</button></div></form></div></div>
+<div class="ft-in ft-bar"><span>&copy; {% now "Y" %} Institute of Safety Professionals of Nigeria. All rights reserved.</span><span><a href="/sitemap.xml">Sitemap</a></span></div></footer>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Image viewer"><div class="ctl"><button id="pv" aria-label="Previous">&larr;</button><button id="nx" aria-label="Next">&rarr;</button><button id="cl" aria-label="Close">&times;</button></div><figure><div class="big-im"></div><figcaption><span id="cap"></span><span class="m" id="ct"></span></figcaption></figure></div>
+<script src="{% static 'js/site.js' %}" defer></script><script src="{% static 'js/lightbox.js' %}" defer></script>{% block extra_js %}{% endblock %}
+</body></html>{% endwith %}

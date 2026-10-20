@@ -1,0 +1,10 @@
+{% extends "wagtailadmin/base.html" %}
+{% block titletag %}Send newsletters{% endblock %}
+{% block content %}{% include "wagtailadmin/shared/header.html" with title="Send newsletters" icon="mail" %}
+<div class="nice-padding"><p>Write newsletters under People &amp; contacts &rarr; Newsletters. Here you can send yourself a test, queue a newsletter for all confirmed subscribers, and follow progress. Emails go out in batches by the scheduled job (<code>send_newsletters</code>).</p>
+{% if rows %}<table class="listing"><thead><tr><th>Subject</th><th>Status</th><th>Confirmed subscribers</th><th>Sent</th><th>Failed</th><th>Waiting</th><th></th></tr></thead><tbody>
+{% for r in rows %}<tr><td>{{ r.nl.subject }}</td><td>{{ r.nl.get_status_display }}</td><td>{{ r.recipients }}</td><td>{{ r.sent }}</td><td>{{ r.failed }}</td><td>{% if r.nl.status == "queued" %}{{ r.pending }}{% endif %}</td>
+<td><form method="post" style="display:flex;gap:8px;flex-wrap:wrap">{% csrf_token %}<input type="hidden" name="id" value="{{ r.nl.pk }}"><button name="action" value="test" class="button button-secondary">Send me a test</button>
+{% if r.nl.status == "draft" %}<button name="action" value="queue" class="button" onclick="return confirm('Send to {{ r.recipients }} confirmed subscribers?')">Queue to send</button>{% endif %}
+{% if r.nl.status == "queued" %}<button name="action" value="cancel" class="button button-secondary">Pause</button>{% endif %}</form></td></tr>{% endfor %}</tbody></table>
+{% else %}<p>No newsletters yet.</p>{% endif %}</div>{% endblock %}

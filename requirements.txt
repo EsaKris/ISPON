@@ -1,0 +1,7 @@
+Django==5.2.18
+wagtail==7.4.3
+whitenoise==6.12.0
+Pillow==13.0.0
+# Pick ONE database driver that your cPanel host supports:
+# psycopg[binary]==3.2.9   # PostgreSQL (preferred)
+# mysqlclient==2.2.7       # MySQL / MariaDB (common on cPanel)

@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block content %}{% include "includes/page_hero.html" with kicker="ISPON updates" title="Newsletter" %}<div class="wrap" style="max-width:760px;margin:0;padding-top:36px"><p role="status" class="ok">{{ message }}</p>
+{% if token %}<form method="post" style="margin-top:20px">{% csrf_token %}<button class="btn" type="submit">Confirm unsubscribe</button></form>{% endif %}
+{% if confirm %}<form method="post" style="margin-top:20px">{% csrf_token %}<button class="btn" type="submit">Confirm my subscription</button></form>{% endif %}<p style="margin-top:24px"><a class="btn o" href="/">Back to home</a></p></div>{% endblock %}

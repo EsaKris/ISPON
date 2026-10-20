@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Search | ISPON{% endblock %}
+{% block content %}{% include "includes/page_hero.html" with kicker="Find" title="Search" %}
+<div class="wrap" style="padding-top:36px"><form method="get" role="search" class="chips" style="margin-bottom:28px"><label class="m" for="q" style="align-self:center">Search the site</label><input id="q" name="q" value="{{ q }}" style="padding:14px;border:2px solid var(--fg);background:var(--bg);color:var(--fg);min-width:min(420px,100%)"><button class="btn" style="padding:14px 20px">Search</button></form>
+{% if results %}<ol style="padding:0;list-style:none">{% for r in results %}<li style="border-top:2px solid var(--fg);padding:18px 0"><h2 style="font-size:28px"><a href="{{ r.url }}">{{ r.title }}</a></h2><p style="margin:6px 0 0">{{ r.search_description }}</p></li>{% endfor %}</ol>
+<div class="pager">{% if results.has_previous %}<a class="btn o" href="?q={{ q|urlencode }}&page={{ results.previous_page_number }}">Previous</a>{% endif %}{% if results.has_next %}<a class="btn o" href="?q={{ q|urlencode }}&page={{ results.next_page_number }}">Next</a>{% endif %}</div>
+{% elif q %}<p class="empty">No results for &ldquo;{{ q }}&rdquo;.</p>{% else %}<p class="empty">Type a word to search pages and news.</p>{% endif %}</div>{% endblock %}

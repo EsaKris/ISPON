@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% load wagtailcore_tags %}
+{% block content %}{% include "includes/page_hero.html" with kicker="What we do" title=page.title lead=page.intro %}
+<div class="wrap" style="padding-top:36px">{% if services %}<div class="svc">{% for s in services %}<article><span class="m">{{ forloop.counter|stringformat:"02d" }}</span><h2>{{ s.title }}</h2><p>{{ s.description }}</p>{% if s.link_url %}<a class="btn o" href="{{ s.link_url }}">Learn more</a>{% endif %}</article>{% endfor %}</div>{% endif %}
+{% if page.body %}<div class="prose" style="margin-top:40px">{% include "includes/stream.html" with body=page.body %}</div>{% endif %}
+{% if page.cta_label %}<p style="margin-top:36px"><a class="btn" href="{{ page.cta_url }}">{{ page.cta_label }}</a></p>{% endif %}</div>{% endblock %}

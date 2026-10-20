@@ -1,0 +1,3 @@
+{% load wagtailcore_tags %}<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#0e1210"><p style="font-weight:bold;color:#0a6b3b;letter-spacing:.08em">ISPON NEWSLETTER</p><h1 style="font-size:24px">{{ newsletter.subject }}</h1>
+<div style="font-size:16px;line-height:1.5">{{ newsletter.body|richtext }}</div><hr style="margin:28px 0;border:0;border-top:2px solid #0e1210">
+<p style="font-size:13px;color:#555">Institute of Safety Professionals of Nigeria{% if site.address %}<br>{{ site.address }}{% endif %}<br>You receive this because you subscribed on our website. <a href="{{ unsubscribe_url }}">Unsubscribe</a></p></div>
