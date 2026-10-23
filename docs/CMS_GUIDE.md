@@ -40,3 +40,11 @@ People & contacts > Team members: name, designation, unit, portrait, biography, 
 
 ## Page top bands and the About picture
 Every page opens with the same dark band (small label, big title and an optional lead sentence). The lead comes from the page's intro field. On Pages > About Us, the **Hero picture** field sets the picture on the right of the band on desktop (760 x 600 works well; phones hide it). It currently holds a generated illustration: replace it with a real ISPON photo.
+
+## Homepage hero: slides, pictures and videos
+Pages > Home > **Hero and event** tab > **Hero slides**. Add as many slides as you like; with two or more, the hero becomes a carousel (arrows, dots, a pause button, swipe, and arrow keys; it pauses when someone hovers or focuses it, and never auto-plays for people who prefer reduced motion).
+- **Style: Signature design** keeps the dark hero where moving the cursor lights up hidden hazards.
+- **Style: Your picture**: choose an image (wide, about 1920 x 900). A dark gradient is added so the text stays readable.
+- **Style: Your video**: upload an MP4 or WebM under Documents (short, muted, ideally under 8 MB; it loops and starts by itself) and choose it, or paste a direct video link. Add a Poster picture, which shows while it loads.
+- Each slide has its own small label, headline (one line per row), text and up to two buttons. Untick "visible" to hide a slide. "Seconds per slide" and "Slides change automatically" are at the top of the section. With no slides, the simple fields under "Fallback hero" are used.
+- The **numbers** (12,000+, 46+, 2,930) count up when they scroll into view; edit them on the "Our proud and numbers" tab.

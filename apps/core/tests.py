@@ -521,7 +521,7 @@ class SEOTests(Base):
 
     def test_head_basics_without_logo(self):
         h = self.client.get("/").content.decode()
-        for needle in ['rel="canonical"', 'property="og:title"', 'name="twitter:card" content="summary"', 'name="geo.region" content="NG-ED"',
+        for needle in ['rel="canonical"', 'property="og:title"', 'name="twitter:card" content="summary_large_image"', 'name="geo.region" content="NG-ED"',
                        'name="geo.placename" content="Benin City"', 'rel="manifest"', 'type="application/rss+xml"', "index,follow,max-image-preview:large"]:
             self.assertIn(needle, h)
         self.assertNotIn("geo.position", h)  # never publish invented coordinates
@@ -539,7 +539,8 @@ class SEOTests(Base):
         h = self.client.get("/").content.decode()
         self.assertRegex(h, r'rel="icon" href="[^"]*fill-32x32')
         self.assertIn("fill-180x180", h)
-        self.assertIn("max-600x600", _re.search(r'property="og:image" content="([^"]+)"', h).group(1))
+        faq = self.client.get("/faq/").content.decode()  # a page with no picture of its own falls back to the logo
+        self.assertIn("max-600x600", _re.search(r'property="og:image" content="([^"]+)"', faq).group(1))
         self.assertIn("max-240x240", h.split("<footer")[1])
         m = self.client.get("/site.webmanifest").json()
         self.assertEqual({i["sizes"] for i in m["icons"]}, {"192x192", "512x512"})
@@ -775,3 +776,65 @@ class UpgradeSiteTests(Base):
         counts = (Page.objects.count(), Pillar.objects.count())
         call_command("upgrade_site")  # second run changes nothing
         self.assertEqual((Page.objects.count(), Pillar.objects.count()), counts)
+
+
+class HomepageRedesignTests(Base):
+    def test_carousel_markup_and_controls(self):
+        h = self.client.get("/").content.decode()
+        self.assertEqual(h.count('class="hc-slide'), 3)
+        self.assertIn('aria-roledescription="carousel"', h)
+        for needle in ["hc-prev", "hc-next", "hc-pause", 'aria-label="Go to slide 3"', "hc-live"]:
+            self.assertIn(needle, h)
+        self.assertEqual(h.count("<h1"), 1)
+        self.assertIn("flashlight", h)
+
+    def test_numbers_are_count_up_ready(self):
+        h = self.client.get("/").content.decode()
+        self.assertIn('data-count="12000" data-prefix="" data-suffix="+">12,000+', h)  # final value is in the HTML (works without JavaScript)
+        self.assertIn('data-count="46"', h)
+        self.assertIn('data-count="2930"', h)
+
+    def test_sections_are_in_a_sensible_order(self):
+        h = self.client.get("/").content.decode()
+        order = ['id="hero"', 'class="hm-band"', 'class="hm-about"', 'class="hm-why"', 'class="hm-svc"', 'class="tcards"', 'class="news"']
+        pos = [h.index(x) for x in order]
+        self.assertEqual(pos, sorted(pos))
+
+    def test_about_has_image_and_story_link(self):
+        h = self.client.get("/").content.decode()
+        about = h.split('class="hm-about"')[1].split("</section>")[0]
+        self.assertIn("<img", about)
+        self.assertIn('href="/about-us/"', about)
+
+    def test_video_slide_renders_and_validates(self):
+        from django.core.exceptions import ValidationError
+        from apps.core.models import HeroSlide
+        home = HomePage.objects.get()
+        v = HeroSlide(page=home, kind="video", headline="Watch\nus", video_url="https://example.com/clip.mp4", sort_order=9)
+        v.full_clean()
+        v.save()
+        home.save_revision().publish()
+        h = self.client.get("/").content.decode()
+        self.assertIn('<source src="https://example.com/clip.mp4">', h)
+        self.assertIn(" muted loop playsinline", h)
+        for bad in (HeroSlide(page=home, kind="video", headline="x"), HeroSlide(page=home, kind="image", headline="x")):
+            with self.assertRaises(ValidationError):
+                bad.full_clean()
+
+    def test_hidden_slide_and_fallback(self):
+        from apps.core.models import HeroSlide
+        HeroSlide.objects.filter(kind="image").update(visible=False)
+        HomePage.objects.get().save_revision().publish()
+        h = self.client.get("/").content.decode()
+        self.assertEqual(h.count('class="hc-slide'), 1)
+        self.assertNotIn("hc-prev", h)  # a single slide needs no controls
+        HeroSlide.objects.all().delete()
+        HomePage.objects.get().save_revision().publish()
+        self.assertIn("See the", self.client.get("/").content.decode())  # simple hero fields take over
+
+    def test_admin_home_editor_has_slides(self):
+        self.client.force_login(get_user_model().objects.create_superuser("root", "r@example.com", "x" * 14))
+        home = HomePage.objects.get()
+        page = self.client.get(f"/admin/pages/{home.pk}/edit/").content.decode()
+        self.assertIn("Hero slides", page)
+        self.assertIn("hero_slides", page)

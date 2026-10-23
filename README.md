@@ -51,7 +51,7 @@ The design lives in the templates and CSS, so every page picks it up as soon as 
 2. Copy the new project files over the old ones (keep your `.env` and `media/`).
 3. `pip install -r requirements.txt`
 4. `python manage.py migrate`
-5. `python manage.py upgrade_site` (converts an old plain About Us / Membership page to the designed page types, keeping the old one as an unpublished "-previous" draft; adds Services, Careers and FAQ; fills empty homepage sections and blank settings; never overwrites text you edited; safe to repeat).
+5. `python manage.py upgrade_site` (creates the first hero slide from your existing hero text, converts an old plain About Us / Membership page to the designed page types, keeping the old one as an unpublished "-previous" draft; adds Services, Careers and FAQ; fills empty homepage sections and blank settings; never overwrites text you edited; safe to repeat).
 6. `python manage.py collectstatic --noinput`, then restart the app (cPanel > Setup Python App > Restart) and hard-refresh the browser.
 After step 5, copy any wording you had edited on the old About / Membership page from the "-previous" draft into the new page, then delete the draft.
 

@@ -10,7 +10,7 @@ It never overwrites text you have already edited.
 from django.core.management.base import BaseCommand, CommandError
 
 from apps.core.management.commands import seed_site as sd
-from apps.core.models import AboutExpert, AboutPage, HomePage, MembershipPage, Pillar, SiteSettings, Statistic, StandardPage
+from apps.core.models import HeroSlide, AboutExpert, AboutPage, HomePage, MembershipPage, Pillar, SiteSettings, Statistic, StandardPage
 from apps.core.models import CareerPage, FAQPage, ServicesPage
 from apps.organisation.models import TeamMember
 from wagtail.models import Site
@@ -68,6 +68,10 @@ class Command(BaseCommand):
         if not home.statistics.exists():
             for i, (lab, val, suf) in enumerate(sd.STATS):
                 Statistic.objects.create(page=home, label=lab, value=val, suffix=suf, visible=True, sort_order=i)
+            changed = True
+        if not home.hero_slides.exists():
+            HeroSlide.objects.create(page=home, kind="flashlight", kicker="Institute of Safety Professionals of Nigeria", headline=home.hero_headline, text=home.hero_text,
+                                     cta_label=home.cta_label, cta_url=home.cta_url, cta2_label=home.cta2_label, cta2_url=home.cta2_url)
             changed = True
         for field, value in [("proud_heading", "46 years of experience"), ("services_intro", "Our core services include safety training, professional certification, consultancy, advocacy, and industry collaboration to promote safe and compliant workplaces."),
                              ("team_intro", "Meet our team of experienced safety professionals dedicated to delivering expert guidance, training, and solutions that ensure workplace safety and compliance.")]:

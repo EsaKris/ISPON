@@ -14,7 +14,7 @@ from wagtail.rich_text import RichText
 
 from apps.core.models import AboutExpert, AboutFact, AboutPage, AboutReason, CareerPage, FAQItem, FAQPage, ServicesPage, TimelineEntry
 from apps.core.seed_data import EVENT_URL, POSTS, TEAM, bio
-from apps.core.models import HomePage, MembershipFee, MembershipPage, Pillar, ServiceCard, SiteSettings, StandardPage, Statistic
+from apps.core.models import HeroSlide, HomePage, MembershipFee, MembershipPage, Pillar, ServiceCard, SiteSettings, StandardPage, Statistic
 from apps.gallery.models import GalleryIndexPage
 from apps.news.models import BlogCategory, BlogIndexPage, BlogPostPage
 from apps.organisation.models import Branch, ContactPage, TeamMember, TeamPage
@@ -188,7 +188,7 @@ class Command(BaseCommand):
             announcement_visible=True, announcement_title="Professional Development Conference and Annual General Meeting, Umuahia 2026",
             announcement_detail='Theme: "Building resilient workplaces: advancing psychosocial wellbeing for sustainable development and national growth"',
             announcement_starts=datetime.date(2026, 10, 14), announcement_ends=datetime.date(2026, 10, 16), announcement_button="Register Now", announcement_url=EVENT_URL,
-            intro_title="About ISPON",
+            intro_title="About ISPON", intro_image=load_image("about.png", "ISPON illustration"),
             intro_body="<p>The Institute of Safety Professionals of Nigeria (ISPON) is the recognized professional body dedicated to promoting occupational health, safety, and environmental practices in Nigeria. ISPON provides certification, training, advocacy, and professional support for safety practitioners across industries.</p>",
         ))
         for s in SERVICES:
@@ -197,6 +197,12 @@ class Command(BaseCommand):
             Statistic.objects.create(page=home, label=lab, value=val, suffix=suf, visible=True, sort_order=i)
         for i, (t, d) in enumerate(PILLARS):
             Pillar.objects.create(page=home, title=t, description=d, sort_order=i)
+        HeroSlide.objects.create(page=home, kind="flashlight", kicker="Institute of Safety Professionals of Nigeria", headline="See the\nrisk\nfirst.", text=home.hero_text,
+                                 cta_label="Meet the team", cta_url="/team/", cta2_label="About ISPON", cta2_url="/about-us/", sort_order=0)
+        HeroSlide.objects.create(page=home, kind="image", image=load_image("hero-membership.png", "Hero: membership"), kicker="Membership and certification",
+                                 headline="Professional\nmembership &\ncertification", text=SERVICES[0][1], cta_label="Membership procedure", cta_url="/membership-procedure/", sort_order=1)
+        HeroSlide.objects.create(page=home, kind="image", image=load_image("hero-training.png", "Hero: training"), kicker="Training and development",
+                                 headline="Safety training\n& development", text=SERVICES[1][1], cta_label="Our services", cta_url="/services/", sort_order=2)
         home.save_revision().publish()
         Site.objects.all().delete()
         Site.objects.create(hostname="localhost", root_page=home, is_default_site=True, site_name="ISPON")

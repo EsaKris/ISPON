@@ -1,4 +1,5 @@
 """Core page types: home page, generic content page and global site settings."""
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from modelcluster.fields import ParentalKey
@@ -49,6 +50,9 @@ class HomePage(SEOPage):
     announcement_url = models.URLField(blank=True)
     announcement_button = models.CharField(max_length=40, blank=True)
 
+    hero_autoplay = models.BooleanField("Slides change automatically", default=True)
+    hero_interval = models.PositiveSmallIntegerField("Seconds per slide", default=7)
+    pillars_title = models.CharField(max_length=80, blank=True, default="What we stand for")
     proud_kicker = models.CharField(max_length=60, blank=True, default="Our proud")
     proud_heading = models.CharField(max_length=120, blank=True, help_text="For example: 46 years of experience")
     proud_text = models.TextField(blank=True)
@@ -77,13 +81,14 @@ class HomePage(SEOPage):
 
     edit_handler = TabbedInterface([
         ObjectList(Page.content_panels + [
+            MultiFieldPanel([FieldPanel("hero_autoplay"), FieldPanel("hero_interval"), InlinePanel("hero_slides", label="Hero slide")], "Hero slides: signature design, your picture, or your video"),
             MultiFieldPanel([FieldPanel("hero_headline"), FieldPanel("hero_text"), FieldPanel("cta_label"), FieldPanel("cta_url"),
-                             FieldPanel("cta2_label"), FieldPanel("cta2_url")], "Hero (top of the page)"),
+                             FieldPanel("cta2_label"), FieldPanel("cta2_url")], "Fallback hero (used only when there are no slides)", classname="collapsed"),
             MultiFieldPanel([FieldPanel("announcement_visible"), FieldPanel("announcement_title"), FieldPanel("announcement_detail"),
                              FieldPanel("announcement_starts"), FieldPanel("announcement_ends"), FieldPanel("announcement_url"),
                              FieldPanel("announcement_button")], "Upcoming event banner")], heading="Hero and event"),
         ObjectList([MultiFieldPanel([FieldPanel("intro_title"), FieldPanel("intro_body"), FieldPanel("intro_image")], "About ISPON"),
-                    InlinePanel("pillars", label="Highlight")], heading="About and highlights"),
+                    FieldPanel("pillars_title"), InlinePanel("pillars", label="Highlight")], heading="About and highlights"),
         ObjectList([FieldPanel("proud_kicker"), FieldPanel("proud_heading"), FieldPanel("proud_text"),
                     InlinePanel("statistics", label="Number")], heading="Our proud and numbers"),
         ObjectList([FieldPanel("services_title"), FieldPanel("services_intro"), InlinePanel("services", label="Service")], heading="Services"),
@@ -91,6 +96,14 @@ class HomePage(SEOPage):
         ObjectList(SEOPage.promote_panels, heading="Promote"),
         ObjectList(Page.settings_panels, heading="Settings"),
     ])
+
+    def slide_dicts(self):
+        slides = [x.as_dict() for x in self.hero_slides.all() if x.visible]
+        if not slides:  # nothing configured: fall back to the simple fields
+            slides = [{"kind": "flashlight", "kicker": "Institute of Safety Professionals of Nigeria", "lines": self.headline_lines, "text": self.hero_text,
+                       "cta_label": self.cta_label, "cta_url": self.cta_url, "cta2_label": self.cta2_label, "cta2_url": self.cta2_url,
+                       "image": None, "video": "", "poster": None}]
+        return slides
 
     @property
     def headline_lines(self):
@@ -108,6 +121,8 @@ class HomePage(SEOPage):
 
         ctx = super().get_context(request, *args, **kwargs)
         ctx["services"] = [s for s in self.services.all() if s.visible]
+        ctx["slides"] = self.slide_dicts()
+        ctx["about_page"] = AboutPage.objects.live().first()
         ctx["pillars"] = [x for x in self.pillars.all() if x.visible]
         ctx["stats"] = [s for s in self.statistics.all() if s.visible]
         ctx["blog_page"] = BlogIndexPage.objects.live().first()
@@ -116,6 +131,43 @@ class HomePage(SEOPage):
         ctx["gallery_page"] = GalleryIndexPage.objects.live().first()
         ctx["featured_team"] = TeamMember.objects.published().current().filter(featured=True).select_related("portrait")[:4]
         return ctx
+
+
+class HeroSlide(Orderable):
+    """One slide of the homepage hero carousel."""
+
+    KINDS = [("flashlight", "Signature design (dark, flashlight reveals hazards)"), ("image", "Your picture"), ("video", "Your video (muted, loops)")]
+    page = ParentalKey(HomePage, related_name="hero_slides", on_delete=models.CASCADE)
+    kind = models.CharField("Style", max_length=12, choices=KINDS, default="flashlight")
+    kicker = models.CharField("Small label above the headline", max_length=80, blank=True)
+    headline = models.TextField(help_text="One line per row of the big headline.")
+    text = models.TextField("Supporting text", blank=True)
+    cta_label = models.CharField("Main button label", max_length=40, blank=True)
+    cta_url = models.CharField("Main button link", max_length=300, blank=True)
+    cta2_label = models.CharField("Second button label", max_length=40, blank=True)
+    cta2_url = models.CharField("Second button link", max_length=300, blank=True)
+    image = models.ForeignKey("wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+", help_text="Style 'Your picture'. Wide pictures (1920 x 900) work best.")
+    video = models.ForeignKey("wagtaildocs.Document", null=True, blank=True, on_delete=models.SET_NULL, related_name="+", help_text="Style 'Your video': upload an MP4 or WebM under Documents (keep it short and small, ideally under 8 MB).")
+    video_url = models.URLField("or video link", blank=True, help_text="A direct link to an MP4/WebM file, used when no video is uploaded.")
+    poster = models.ForeignKey("wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+", help_text="Picture shown while the video loads, and to people who prefer reduced motion.")
+    visible = models.BooleanField(default=True)
+    panels = [FieldPanel("kind"), FieldPanel("kicker"), FieldPanel("headline"), FieldPanel("text"), FieldPanel("cta_label"), FieldPanel("cta_url"),
+              FieldPanel("cta2_label"), FieldPanel("cta2_url"), FieldPanel("image"), FieldPanel("video"), FieldPanel("video_url"), FieldPanel("poster"), FieldPanel("visible")]
+
+    def clean(self):
+        super().clean()
+        if self.kind == "image" and not self.image_id:
+            raise ValidationError({"image": "Choose a picture for this slide, or change the style."})
+        if self.kind == "video":
+            if not (self.video_id or self.video_url):
+                raise ValidationError({"video": "Upload a video or paste a video link, or change the style."})
+            if self.video_id and not self.video.file.name.lower().endswith((".mp4", ".webm")):
+                raise ValidationError({"video": "The video must be an MP4 or WebM file."})
+
+    def as_dict(self):
+        return {"kind": self.kind, "kicker": self.kicker, "lines": [ln for ln in self.headline.splitlines() if ln.strip()], "text": self.text,
+                "cta_label": self.cta_label, "cta_url": self.cta_url, "cta2_label": self.cta2_label, "cta2_url": self.cta2_url,
+                "image": self.image, "video": self.video.url if self.video_id else self.video_url, "poster": self.poster}
 
 
 class ServiceCard(Orderable):
