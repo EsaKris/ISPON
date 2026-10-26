@@ -624,7 +624,7 @@ class OldSiteContentTests(Base):
     def test_register_button_and_social_links_in_header(self):
         h = self.client.get("/").content.decode()
         self.assertIn('class="navbtn" href="https://isponconf-2026.org/"', h)
-        self.assertIn("https://x.com/isponng_safety", h.split("</header>")[0])
+        self.assertIn("https://x.com/isponng_safety", h.split('<footer class="ft">')[1])
 
     def test_about_page_sections(self):
         h = self.client.get("/about-us/").content.decode()
@@ -733,10 +733,12 @@ class HeroStyleTests(Base):
         self.assertIn('class="ph-img"', h)
         self.assertNotIn('class="ph-img"', self.client.get("/faq/").content.decode())
 
-    def test_topbar_markup_for_small_screens(self):
+    def test_navbar_is_fixed_and_footer_has_social_links(self):
         h = self.client.get("/").content.decode()
-        self.assertIn('class="topbar"', h)
-        self.assertIn('class="tb-r"', h)
+        self.assertIn('<header class="top" id="navbar">', h)
+        self.assertNotIn('class="topbar"', h)
+        self.assertIn('class="soc"', h)
+
 
 
 class UpgradeSiteTests(Base):

@@ -13,6 +13,9 @@ Content from ispon.gov.ng (homepage, About, Membership, Contact, Team, Blog page
 WCAG audit with a real tool (only static checks run: lang, one h1, alt text, form labels, skip link); performance measurements; blog page 2 and the Gallery page of the old site were not read.
 **Newsletter:** double opt-in (confirmation email), unsubscribe links and one-click unsubscribe, newsletters written and queued in the admin and sent in batches by a scheduled job. Needs working SMTP (see Email below). Sending has been tested with a test mail backend only, never against a real mail server.
 
+## Design
+Navy (#0A2540) and orange (#FF6B00) with DM Serif Display and DM Sans (self-hosted in `static/fonts`, no external font requests), rounded cards, pill buttons, a navigation bar that is transparent over the page's top band and turns solid on scroll, fade-up reveals, a countdown for upcoming events and a hero carousel. All styles are in `static/css/ispon.css`; colours are CSS variables at the top. The admin panel and its logo are themed to match. Generated starter pictures (news covers, team monograms, About and hero illustrations) were regenerated in the same palette.
+
 ## Local setup
 ```
 python -m venv venv && source venv/bin/activate

@@ -48,3 +48,6 @@ Pages > Home > **Hero and event** tab > **Hero slides**. Add as many slides as y
 - **Style: Your video**: upload an MP4 or WebM under Documents (short, muted, ideally under 8 MB; it loops and starts by itself) and choose it, or paste a direct video link. Add a Poster picture, which shows while it loads.
 - Each slide has its own small label, headline (one line per row), text and up to two buttons. Untick "visible" to hide a slide. "Seconds per slide" and "Slides change automatically" are at the top of the section. With no slides, the simple fields under "Fallback hero" are used.
 - The **numbers** (12,000+, 46+, 2,930) count up when they scroll into view; edit them on the "Our proud and numbers" tab.
+
+## Event banner and countdown
+Home > Hero and event > Upcoming event banner. When the start date is in the future, a live countdown (days, hours, minutes, seconds, counting to 08:00 on the start date) appears in the banner automatically. After the end date the banner is labelled "Past event" and the button and countdown disappear. Untick "visible" to hide the banner.

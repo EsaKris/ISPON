@@ -400,7 +400,7 @@ class SiteSettings(BaseSiteSetting):
     twitter_handle = models.CharField("X (Twitter) handle", max_length=40, blank=True, help_text="For example @isponng_safety")
     google_verification = models.CharField("Google Search Console token", max_length=120, blank=True)
     bing_verification = models.CharField("Bing Webmaster token", max_length=120, blank=True)
-    theme_color = models.CharField(max_length=7, default="#0a6b3b")
+    theme_color = models.CharField(max_length=7, default="#0A2540")
     address_region = models.CharField("State", max_length=80, default="Edo State")
     geo_placename = models.CharField("City", max_length=80, default="Benin City")
     geo_region = models.CharField("ISO region code", max_length=10, default="NG-ED", help_text="Nigeria state code, for example NG-ED, NG-LA, NG-FC")

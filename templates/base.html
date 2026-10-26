@@ -19,8 +19,7 @@
 <link rel="stylesheet" href="{% static 'css/ispon.css' %}">
 {% block extra_head %}{% endblock %}</head>
 <body class="{% block body_class %}{% endblock %}"><a class="skip" href="#main">Skip to content</a>
-{% if s.phone or s.email or s.facebook or s.x_twitter or s.instagram %}<div class="topbar"><span>{% if s.phone %}<a href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a>{% endif %}{% if s.email %}<a href="mailto:{{ s.email }}">{{ s.email }}</a>{% endif %}</span><span class="tb-r">{% if s.facebook %}<a href="{{ s.facebook }}" rel="noopener">Facebook</a>{% endif %}{% if s.x_twitter %}<a href="{{ s.x_twitter }}" rel="noopener">X</a>{% endif %}{% if s.instagram %}<a href="{{ s.instagram }}" rel="noopener">Instagram</a>{% endif %}</span></div>{% endif %}
-<header class="top">
+<header class="top" id="navbar">
 <a class="logo" href="/" aria-label="ISPON home">{% logo_url "max-200x200|format-png" as hl %}<img src="{{ hl }}" alt="" width="44" height="44"><span>ISPON<small>Safety Professionals of Nigeria</small></span></a>
 <button class="mb" aria-expanded="false" aria-controls="nav">Menu</button>
 <nav class="nav" id="nav" aria-label="Primary">{% nav_items as nav %}{% for i in nav %}<a href="{{ i.url }}"{% if i.active %} aria-current="page"{% endif %}>{{ i.title }}</a>{% endfor %}{% if s.header_button_label and s.header_button_url %}<a class="navbtn" href="{{ s.header_button_url }}" rel="noopener">{{ s.header_button_label }}</a>{% endif %}</nav></header>
