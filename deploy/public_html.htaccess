@@ -1,0 +1,19 @@
+# Add to the domain's document root .htaccess (cPanel/Apache). Django (Passenger) lines are added by cPanel.
+RewriteEngine On
+# Always HTTPS and one hostname
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Never serve dotfiles (except .well-known), backups, dumps or config
+RewriteRule "(^|/)\.(?!well-known)" - [F,L]
+<FilesMatch "\.(env|ini|log|sql|bak|old|swp|sqlite3|py|pyc|md|txt)$">
+  Require all denied
+</FilesMatch>
+<Files "robots.txt">
+  Require all granted
+</Files>
+Options -Indexes
+ServerSignature Off
+<IfModule mod_headers.c>
+  Header always unset X-Powered-By
+  Header always set Strict-Transport-Security "max-age=31536000"
+</IfModule>

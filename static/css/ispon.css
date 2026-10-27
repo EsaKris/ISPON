@@ -199,3 +199,6 @@ table.fees th{background:var(--navy);color:#fff;font:600 12px var(--body);letter
 /* ---- motion ---- */
 .js .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}.js .reveal.visible{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}.tape div,.bd{animation:none}.hc-slide{transition:none}.flip{transition:none}}
+.cn{position:fixed;left:16px;bottom:16px;z-index:90;max-width:560px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--navy-dark);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:16px 20px;box-shadow:0 24px 48px rgba(0,0,0,.35)}
+.cn[hidden]{display:none}.cn p{margin:0;font-size:14px;flex:1 1 260px}.cn a{color:var(--orange-light)}.cn .btn{padding:10px 22px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14px}.consent input{width:auto;margin-top:5px}

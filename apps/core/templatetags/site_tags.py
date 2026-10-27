@@ -38,7 +38,7 @@ def seo(context):
 
 @register.simple_tag
 def jsonld(m):
-    return mark_safe('<script type="application/ld+json">' + seo_mod.jsonld(m) + "</script>")
+    return mark_safe('<script type="application/ld+json">' + seo_mod.jsonld(m) + "</script>")  # nosec B308 B703 (JSON with < > & escaped)
 
 
 @register.simple_tag
@@ -54,3 +54,14 @@ def footer_pages(context):
     if not site:
         return []
     return [{"title": p.title, "url": p.url} for p in site.root_page.get_children().live().specific() if getattr(p, "show_in_footer", False)]
+
+
+@register.simple_tag(takes_context=True)
+def legal_pages(context):
+    """Privacy, cookie and terms pages (by slug), for the footer bar."""
+    site = Site.find_for_request(context["request"])
+    if not site:
+        return []
+    order = ["privacy-policy", "cookie-policy", "terms-of-use"]
+    pages = {p.slug: p for p in site.root_page.get_children().live().filter(slug__in=order)}
+    return [{"title": pages[s].title, "url": pages[s].url, "slug": s} for s in order if s in pages]

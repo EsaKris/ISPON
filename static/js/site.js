@@ -11,6 +11,11 @@
       if (el.getBoundingClientRect().top > window.innerHeight) { el.classList.add('reveal'); ro.observe(el); }
     });
   }
+  /* cookie notice (informational: only essential cookies are used); remembered in localStorage, not a cookie */
+  var cn = document.getElementById('cookie-note');
+  try { if (cn && !localStorage.getItem('ispon-notice')) cn.hidden = false; } catch (e) { if (cn) cn.hidden = false; }
+  var ok = document.getElementById('cookie-ok');
+  if (ok) ok.addEventListener('click', function () { try { localStorage.setItem('ispon-notice', '1'); } catch (e) {} cn.hidden = true; });
   /* countdown to the event banner */
   var cd = document.querySelector('.cd[data-target]');
   if (cd) {

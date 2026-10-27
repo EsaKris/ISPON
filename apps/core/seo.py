@@ -155,7 +155,7 @@ def graph(request, m):
 
 
 def jsonld(m):
-    return json.dumps({"@context": "https://schema.org", "@graph": m["graph"]}, ensure_ascii=False, default=str).replace("<", "\\u003c")
+    return json.dumps({"@context": "https://schema.org", "@graph": m["graph"]}, ensure_ascii=False, default=str).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
 
 
 def logo_url(spec="max-200x200|format-png"):

@@ -13,6 +13,9 @@ Content from ispon.gov.ng (homepage, About, Membership, Contact, Team, Blog page
 WCAG audit with a real tool (only static checks run: lang, one h1, alt text, form labels, skip link); performance measurements; blog page 2 and the Gallery page of the old site were not read.
 **Newsletter:** double opt-in (confirmation email), unsubscribe links and one-click unsubscribe, newsletters written and queued in the admin and sent in batches by a scheduled job. Needs working SMTP (see Email below). Sending has been tested with a test mail backend only, never against a real mail server.
 
+## Security
+See **SECURITY.md** for the full list of protections, the launch checklist and recovery steps. Summary: two-factor sign-in for editors, brute-force lockout, strict Content-Security-Policy and headers, hardened cookies, request throttling and scanner bans, upload restrictions, automatic data deletion matching the Privacy Policy, security logging, `/.well-known/security.txt`, and draft Privacy, Cookie and Terms pages. Run `python manage.py test apps.core.test_security`, `pip-audit -r requirements.txt` and `bandit -r apps config` before each release.
+
 ## Design
 Navy (#0A2540) and orange (#FF6B00) with DM Serif Display and DM Sans (self-hosted in `static/fonts`, no external font requests), rounded cards, pill buttons, a navigation bar that is transparent over the page's top band and turns solid on scroll, fade-up reveals, a countdown for upcoming events and a hero carousel. All styles are in `static/css/ispon.css`; colours are CSS variables at the top. The admin panel and its logo are themed to match. Generated starter pictures (news covers, team monograms, About and hero illustrations) were regenerated in the same palette.
 
@@ -50,7 +53,7 @@ Error logs: cPanel > Errors, or the `stderr.log` in the app root.
 
 ## Updating an existing site to the current design
 The design lives in the templates and CSS, so every page picks it up as soon as the new code is live. Steps (local or cPanel terminal, with the virtualenv active):
-1. Back up the database and `media/`.
+1. Back up the database and `media/`. (Security release: also read SECURITY.md and set the new `.env` values.)
 2. Copy the new project files over the old ones (keep your `.env` and `media/`).
 3. `pip install -r requirements.txt`
 4. `python manage.py migrate`
@@ -71,4 +74,4 @@ To bring in the real pictures from the old ispon.gov.ng site (logo, the 14 team 
 Large lists (thousands) are better sent through a dedicated mail service; this setup is meant for a modest list.
 
 ## Production checklist
-`DJANGO_DEBUG=0`, unique secret key, allowed hosts, CSRF origins, HTTPS on, admin passwords 12+ chars, `python manage.py check --deploy`, backups tested, real logo uploaded in Settings > Site settings.
+`DJANGO_DEBUG=0`, unique secret key, allowed hosts, CSRF origins, HTTPS on, admin passwords 14+ chars, `python manage.py check --deploy`, backups tested, real logo uploaded in Settings > Site settings.

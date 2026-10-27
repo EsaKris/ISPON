@@ -13,6 +13,7 @@ from wagtail.models import Page, Site
 from wagtail.rich_text import RichText
 
 from apps.core.models import AboutExpert, AboutFact, AboutPage, AboutReason, CareerPage, FAQItem, FAQPage, ServicesPage, TimelineEntry
+from apps.core.legal_content import PAGES as LEGAL_PAGES
 from apps.core.seed_data import EVENT_URL, POSTS, TEAM, bio
 from apps.core.models import HeroSlide, HomePage, MembershipFee, MembershipPage, Pillar, ServiceCard, SiteSettings, StandardPage, Statistic
 from apps.gallery.models import GalleryIndexPage
@@ -70,11 +71,16 @@ def load_image(rel, title):
     data = path.read_bytes()
     with PILImage.open(path) as im:
         size = im.size
-    img = Image(title=title, file_hash=hashlib.sha1(data).hexdigest(), file_size=len(data))
+    img = Image(title=title, file_hash=hashlib.sha1(data, usedforsecurity=False).hexdigest(), file_size=len(data))
     img.file.save(path.name, ContentFile(data), save=False)
     img.width, img.height = size
     img.save()
     return img
+
+
+def legal_kwargs(body):
+    """Body and intro for a legal page, as StreamField data."""
+    return dict(menu=False, footer=False, body=[(t, rt(v) if t == "paragraph" else v) for t, v in body])
 
 
 def tidy(t):
@@ -209,7 +215,8 @@ class Command(BaseCommand):
 
         def child(model, title, slug, **kw):
             menu = kw.pop("menu", True)
-            page = home.add_child(instance=model(title=title, slug=slug, show_in_menus=menu, **({} if menu else {"show_in_footer": True}), **kw))
+            footer = kw.pop("footer", not menu)
+            page = home.add_child(instance=model(title=title, slug=slug, show_in_menus=menu, show_in_footer=footer, **kw))
             page.save_revision().publish()
             return page
 
@@ -238,6 +245,8 @@ class Command(BaseCommand):
         child(ServicesPage, "Our Services", "services", **services_kwargs())
         child(CareerPage, "Careers", "careers", **careers_kwargs())
         child(FAQPage, "FAQ", "faq", **faq_kwargs())
+        for title_, slug_, body_ in LEGAL_PAGES:
+            child(StandardPage, title_, slug_, intro="Last updated 26 October 2026", **legal_kwargs(body_))
         for st, addr, chair, ph, em in BRANCHES:
             Branch.objects.create(name=f"ISPON {st} Branch", state=st, address=tidy(addr), contact_person=tidy(chair), phone=phones(ph), email=em, is_published=True)
         site = Site.objects.get(is_default_site=True)

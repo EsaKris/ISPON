@@ -58,7 +58,7 @@ def bulk_upload(request):
                 if err:
                     skipped.append(f"{f.name}: {err}")
                     continue
-                digest = hashlib.sha1(data).hexdigest()
+                digest = hashlib.sha1(data, usedforsecurity=False).hexdigest()
                 img = Image.objects.filter(file_hash=digest).first()  # reuse identical uploads
                 if not img:
                     img = Image(title=Path(f.name).stem[:255], uploaded_by_user=user, file_hash=digest, file_size=len(data))

@@ -1,0 +1,1 @@
+DM Serif Display and DM Sans are licensed under the SIL Open Font License 1.1. Files from the Fontsource npm packages.

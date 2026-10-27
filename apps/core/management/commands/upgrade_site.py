@@ -13,6 +13,7 @@ from apps.core.management.commands import seed_site as sd
 from apps.core.models import HeroSlide, AboutExpert, AboutPage, HomePage, MembershipPage, Pillar, SiteSettings, Statistic, StandardPage
 from apps.core.models import CareerPage, FAQPage, ServicesPage
 from apps.organisation.models import TeamMember
+from apps.core.legal_content import PAGES as LEGAL_PAGES
 from wagtail.models import Site
 
 
@@ -59,6 +60,13 @@ class Command(BaseCommand):
             if not model.objects.exists():
                 add(model, title, slug, kw())
                 done.append(f"{title}: created")
+        for title_, slug_, body_ in LEGAL_PAGES:
+            if not home.get_children().filter(slug=slug_).exists():
+                kw = sd.legal_kwargs(body_)
+                menu, footer = kw.pop("menu"), kw.pop("footer")
+                page = home.add_child(instance=StandardPage(title=title_, slug=slug_, show_in_menus=menu, show_in_footer=footer, intro="Last updated 26 October 2026", **kw))
+                page.save_revision().publish()
+                done.append(f"{title_}: created")
         # 3. empty homepage sections (never overwrites edited text)
         changed = False
         for i, (t, d) in enumerate(sd.PILLARS):

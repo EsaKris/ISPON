@@ -75,7 +75,7 @@ class BranchTests(Base):
 
 
 class ContactFormTests(Base):
-    data = {"name": "Ada", "email": "ada@example.com", "subject": "Hello", "message": "Hi there"}
+    data = {"name": "Ada", "email": "ada@example.com", "subject": "Hello", "message": "Hi there", "consent": "on"}
 
     def test_valid_submission_stored(self):
         r = self.client.post("/contact-page/", self.data)

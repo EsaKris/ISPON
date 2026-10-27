@@ -51,3 +51,11 @@ Pages > Home > **Hero and event** tab > **Hero slides**. Add as many slides as y
 
 ## Event banner and countdown
 Home > Hero and event > Upcoming event banner. When the start date is in the future, a live countdown (days, hours, minutes, seconds, counting to 08:00 on the start date) appears in the banner automatically. After the end date the banner is labelled "Past event" and the button and countdown disappear. Untick "visible" to hide the banner.
+
+## Signing in securely
+- Your password must be 14+ characters and not a common one. Use a password manager.
+- The first time you sign in you must set up **two-factor authentication**: scan the QR code with an authenticator app (Google Authenticator, Microsoft Authenticator, Authy...) and keep the backup codes somewhere safe and offline. After that you enter a 6-digit code at each sign-in.
+- After 5 wrong attempts your account is locked for an hour. Never share your login; the site signs you out after 2 hours of inactivity.
+- Lost your phone? Ask an administrator to reset your two-factor device (Settings > Users).
+- **Legal pages:** Pages > Privacy Policy, Cookie Policy, Terms of Use are normal pages. If you change how the website collects data (new forms, analytics, a mailing service), update them first.
+- **Contact messages and subscribers** are deleted automatically on a schedule (24 months, 12 months, 30 days). Do not copy them into spreadsheets or chats.

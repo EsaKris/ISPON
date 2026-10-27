@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+import datetime
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from wagtail.models import Page
 
@@ -28,3 +30,15 @@ def manifest(request):
     return JsonResponse({"name": "Institute of Safety Professionals of Nigeria", "short_name": "ISPON", "start_url": "/", "display": "browser",
                          "theme_color": s.theme_color, "background_color": "#f1eee6", "lang": "en-NG", "icons": icons},
                         content_type="application/manifest+json")
+
+
+def security_txt(request):
+    """RFC 9116 contact file for people who find a vulnerability. The expiry date rolls forward automatically."""
+    from .seo import site_settings
+
+    s = site_settings(request)
+    expires = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=300)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    host = request.build_absolute_uri("/").rstrip("/")
+    body = (f"Contact: mailto:{s.email or 'info@ispon.gov.ng'}\nExpires: {expires}\nPreferred-Languages: en\n"
+            f"Canonical: {host}/.well-known/security.txt\nPolicy: {host}/terms-of-use/\n")
+    return HttpResponse(body, content_type="text/plain; charset=utf-8")

@@ -27,7 +27,7 @@
 <footer class="ft">
 <section class="ft-news" aria-labelledby="ft-nl"><div class="ft-in"><div><h2 id="ft-nl">Stay informed</h2><p>{{ s.newsletter_text|default:"Subscribe to our Newsletter to be updated. We promise not to spam." }}</p></div>
 <form method="post" action="{% url 'subscriptions:subscribe' %}">{% csrf_token %}<div class="ft-row"><label class="m" for="nl-email">Email address</label><input id="nl-email" type="email" name="email" required autocomplete="email"><button class="btn" type="submit">Subscribe</button></div><div class="hp" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></div>
-<p class="ft-consent"><input id="nl-consent" type="checkbox" name="consent" required> <label for="nl-consent">I agree to receive ISPON updates by email and can unsubscribe at any time. We will email you a link to confirm.</label></p></form></div></section>
+<p class="ft-consent"><input id="nl-consent" type="checkbox" name="consent" required> <label for="nl-consent">I agree to receive ISPON updates by email (see the <a href="/privacy-policy/">Privacy Policy</a>) and can unsubscribe at any time. We will email you a link to confirm.</label></p></form></div></section>
 <div class="ft-in ft-main">
 <div><a href="/" aria-label="ISPON home" class="ft-logo">{% logo_url "max-240x240|format-png" as fl %}<img src="{{ fl }}" alt="ISPON logo" height="56"></a><p>{{ s.footer_text|default:"Institute of Safety Professionals of Nigeria." }}</p>
 <p class="soc">{% if s.facebook %}<a href="{{ s.facebook }}" rel="noopener">Facebook</a>{% endif %}{% if s.x_twitter %}<a href="{{ s.x_twitter }}" rel="noopener">X</a>{% endif %}{% if s.instagram %}<a href="{{ s.instagram }}" rel="noopener">Instagram</a>{% endif %}</p></div>
@@ -35,7 +35,8 @@
 <div><h3>Visit us</h3>{% if s.address %}<p>{{ s.address|linebreaksbr }}</p>{% endif %}{% if s.office_hours %}<p>{{ s.office_hours }}</p>{% endif %}</div>
 <div><h3>Contact</h3><ul>{% if s.phone %}<li><a href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a></li>{% endif %}{% if s.email %}<li><a href="mailto:{{ s.email }}">{{ s.email }}</a></li>{% endif %}</ul>
 <form method="get" action="/search/" role="search" class="ft-search"><label class="m" for="fs">Search the site</label><div class="ft-row"><input id="fs" name="q"><button class="btn" type="submit">Go</button></div></form></div></div>
-<div class="ft-in ft-bar"><span>&copy; {% now "Y" %} Institute of Safety Professionals of Nigeria. All rights reserved.</span><span><a href="/sitemap.xml">Sitemap</a></span></div></footer>
+<div class="ft-in ft-bar"><span>&copy; {% now "Y" %} Institute of Safety Professionals of Nigeria. All rights reserved.</span><span>{% legal_pages as legal %}{% for l in legal %}<a href="{{ l.url }}">{{ l.title }}</a> &middot; {% endfor %}<a href="/sitemap.xml">Sitemap</a></span></div></footer>
+<div id="cookie-note" class="cn" role="region" aria-label="Cookie notice" hidden><p>This site uses only essential cookies for security and its forms. No tracking or advertising cookies. {% for l in legal %}{% if l.slug == "cookie-policy" %}<a href="{{ l.url }}">Cookie Policy</a>{% endif %}{% endfor %}</p><button type="button" class="btn" id="cookie-ok">Got it</button></div>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Image viewer"><div class="ctl"><button id="pv" aria-label="Previous">&larr;</button><button id="nx" aria-label="Next">&rarr;</button><button id="cl" aria-label="Close">&times;</button></div><figure><div class="big-im"></div><figcaption><span id="cap"></span><span class="m" id="ct"></span></figcaption></figure></div>
 <script src="{% static 'js/site.js' %}" defer></script><script src="{% static 'js/lightbox.js' %}" defer></script>{% block extra_js %}{% endblock %}
 </body></html>{% endwith %}

@@ -107,6 +107,7 @@ class ContactSubmission(models.Model):
 
 
 class ContactForm(forms.ModelForm):
+    consent = forms.BooleanField(required=True, error_messages={"required": "Please confirm you have read the Privacy Policy."})
     website = forms.CharField(required=False, widget=forms.TextInput(attrs={"tabindex": "-1", "autocomplete": "off"}))  # honeypot
 
     class Meta:

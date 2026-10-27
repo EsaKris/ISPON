@@ -1,0 +1,12 @@
+# Copy to <media folder>/.htaccess. Uploaded files must never run as code or be listed.
+Options -Indexes -ExecCGI
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .pl .py .cgi
+RemoveType .php .phtml
+<FilesMatch "\.(php\d?|phtml|pl|py|cgi|sh|asp|aspx|jsp|exe|html?|svg)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Content-Security-Policy "default-src 'none'; img-src 'self'; media-src 'self'; sandbox"
+  Header set Cross-Origin-Resource-Policy "same-site"
+</IfModule>

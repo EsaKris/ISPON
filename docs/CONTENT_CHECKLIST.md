@@ -22,3 +22,6 @@ Read: homepage, About, Membership, Contact, Team, Blog page 1. Not read: Gallery
 - [ ] "Register Now" in the menu points to https://isponconf-2026.org/ as on the old site; remove it once the Umuahia conference is over (Settings > Site settings > Menu button).
 - [ ] Services, Careers and FAQ pages were added. The old site had no content for them (dead links), so: FAQ answers are built only from ISPON's own published text (check them); Careers shows 'no vacancies listed' until you add some; Services reuses the six service cards.
 - [ ] Old blog page 2 (older posts) could not be read: add them from the old site.
+- [ ] SECURITY: have a lawyer review the Privacy Policy, Cookie Policy and Terms of Use; confirm the hosting country; name a data protection contact; check NDPC registration duties.
+- [ ] SECURITY: follow the launch checklist in SECURITY.md (random secret key, HTTPS, 2FA for every editor, .htaccess files, cron jobs for backup/purge/newsletter, firewall).
+- [ ] SECURITY: decide on HSTS includeSubdomains/preload (default off) and on a custom admin path.

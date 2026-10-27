@@ -23,8 +23,10 @@ MAX_BYTES = 12 * 1024 * 1024
 
 
 def fetch(url, timeout=25):
+    if not url.startswith("https://"):  # never follow file:, ftp: or plain http links
+        raise ValueError("only https URLs are allowed")
     req = urllib.request.Request(url, headers={"User-Agent": "ISPON-site-importer/1.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
+    with urllib.request.urlopen(req, timeout=timeout) as r:  # nosec B310 (https only, checked above)
         return r.read(MAX_BYTES)
 
 
@@ -35,7 +37,7 @@ def to_image(data, title, filename):
             raise ValueError("unsupported image format")
         size = im.size
         im.verify()
-    digest = hashlib.sha1(data).hexdigest()
+    digest = hashlib.sha1(data, usedforsecurity=False).hexdigest()
     existing = Image.objects.filter(file_hash=digest).first()
     if existing:
         return existing
